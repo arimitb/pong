@@ -1,0 +1,57 @@
+:root {
+	--fg-col: #fff;
+	--bg-col: #000;
+}
+
+body {
+	margin: 0;
+	background-color: var(--bg-col);
+	overflow: hidden;
+}
+
+h1, .instruction {
+	font-family: monospace;
+	color: var(--fg-col);
+}
+
+.game-canvas {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0.8);
+	border: 2px solid var(--fg-col);
+}
+
+.player-select {
+	display: flex;
+	flex-flow: row wrap;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	padding: 1rem 2rem;
+	transform: translate(-50%, -50%);
+	background: var(--bg-col);
+	border: 2px solid var(--fg-col);
+	z-index: 100;
+}
+
+.player-select > h1 {
+	padding: 2rem;
+}
+
+.player-select > h1:hover {
+	color: red;
+	cursor: pointer;
+}
+
+.instruction {
+	position: absolute;
+	bottom: 1rem;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.instruction span {
+	padding: 0.125rem 0.25rem;
+	border: 1px solid var(--fg-col);
+}
