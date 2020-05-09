@@ -1,9 +1,12 @@
 $(() => {
 	// Start the game when the user selects which player they want to play as.
 	$('.player-select > h1').on('click', e => {
-		// Take the playerId (either 0 or 1) from the "data-player" attribute of the button
+		// Take the selfId (either 0 or 1) from the "data-player" attribute of the button
 		// they clicked. data-player is a custom attribute.
-		const playerId = parseInt($(e.target).attr('data-player'))
+		const selfId = parseInt($(e.target).attr('data-player'))
+
+		// If our player is 0, the opponent is 1; the our player is 1, the opponent is 0
+		const opponentId = selfId == 0 ? 1 : 0
 
 		// Remove the selection box once the selection has been made.
 		$('.player-select').css('display', 'none')
@@ -152,10 +155,10 @@ $(() => {
 		function gameLoop () {
 
 			// Update the position of the playeer's paddle based on whether "up" or "down" is active.
-			if (players[playerId].up && players[playerId].position > 0) {
-				players[playerId].position -= gameInfo.paddle.speed
-			} else if (players[playerId].down && players[playerId].position < gameInfo.arena.height - gameInfo.paddle.height) {
-				players[playerId].position += gameInfo.paddle.speed
+			if (players[selfId].up && players[selfId].position > 0) {
+				players[selfId].position -= gameInfo.paddle.speed
+			} else if (players[selfId].down && players[selfId].position < gameInfo.arena.height - gameInfo.paddle.height) {
+				players[selfId].position += gameInfo.paddle.speed
 			}
 
 			// Communicate this updated position to the server
@@ -178,7 +181,7 @@ $(() => {
 			// We only check whether our player has lost, not whether they have won.
 			// We emit this to the server, so if we get the message that the other
 			// player has lost, then we would automatically know that our player has won.
-			if (playerId == 0) {
+			if (selfId == 0) {
 				// Check for player 1
 
 				// Has the ball reached the paddle?
@@ -210,7 +213,7 @@ $(() => {
 			} else {
 				// Check for player 2
 				if (ball.position.x >= gameInfo.arena.width - gameInfo.paddle.width) {
-					if (ball.position.y >= players[playerId].position && ball.position.y <= players[playerId].position + gameInfo.paddle.height) {
+					if (ball.position.y >= players[selfId].position && ball.position.y <= players[selfId].position + gameInfo.paddle.height) {
 						ball.velocity.x *= -1
 						ball.position.x = gameInfo.arena.width - gameInfo.paddle.width - 1
 						emitRally()
@@ -302,9 +305,9 @@ $(() => {
 		// when they press the up or down arrow key.
 		$(document).on('keydown', e => {
 			if (e.key == 'ArrowUp') {
-				players[playerId].up = true
+				players[selfId].up = true
 			} else if (e.key == 'ArrowDown') {
-				players[playerId].down = true
+				players[selfId].down = true
 			}
 		})
 		
@@ -312,9 +315,9 @@ $(() => {
 		// when they release the up or down arrow key.
 		$(document).on('keyup', e => {
 			if (e.key == 'ArrowUp') {
-				players[playerId].up = false
+				players[selfId].up = false
 			} else if (e.key == 'ArrowDown') {
-				players[playerId].down = false
+				players[selfId].down = false
 			} else if (e.key == 'Enter' && gameInfo.gameState == 'start') {
 				// Starts the game when the player presses enter.
 				startGame()
